@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>腾讯AI · QQ音乐 × 腾讯视频 × AI校园活动策划助手</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Page 1: 首页/输入页 -->
+  <div id="page-input" class="page active">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🎵</span>
+        <span class="logo-text">腾讯<span class="highlight">AI</span></span>
+      </div>
+      <span class="logo-subtitle">QQ音乐 × 腾讯视频 × AI校园活动策划助手</span>
+    </header>
+    <section class="slogan">
+      <h1>「10分钟，策划一场专业级校园活动」</h1>
+    </section>
+    <main class="form-container">
+      <div class="form-card">
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">①</span>活动主题</label>
+          <textarea id="theme" class="form-input form-textarea" rows="2" placeholder="例如：动漫社迎新晚会&#10;可以写更多背景说明..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">②</span>预计人数</label>
+          <div class="chip-group" id="people-group">
+            <button class="chip" data-value="5">5人</button>
+            <button class="chip" data-value="10">10人</button>
+            <button class="chip active" data-value="20">20人</button>
+            <button class="chip" data-value="50">50人</button>
+            <button class="chip" data-value="100">100人以上</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">③</span>活动时长</label>
+          <div class="chip-group" id="duration-group">
+            <button class="chip" data-value="60">1小时</button>
+            <button class="chip" data-value="120">2小时</button>
+            <button class="chip active" data-value="180">3小时</button>
+            <button class="chip" data-value="240">半天</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">④</span>活动风格 <span class="label-hint">可多选</span></label>
+          <div class="tag-group" id="style-group">
+            <button class="tag" data-value="正式">🏛️ 正式</button>
+            <button class="tag active" data-value="活泼">🎉 活泼</button>
+            <button class="tag" data-value="搞笑">🤡 搞笑</button>
+            <button class="tag" data-value="温情">💝 温情</button>
+            <button class="tag" data-value="燃">🔥 燃</button>
+            <button class="tag" data-value="治愈">🌿 治愈</button>
+            <button class="tag" data-value="沉浸">🎭 沉浸</button>
+            <button class="tag" data-value="炫酷">⚡ 炫酷</button>
+            <button class="tag" data-value="文艺">🎨 文艺</button>
+            <button class="tag" data-value="松弛">☁️ 松弛</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">⑤</span>活动类型</label>
+          <div class="select-container">
+            <select id="activity-type" class="form-select">
+              <option value="晚会">🎭 晚会</option>
+              <option value="迎新">👋 迎新</option>
+              <option value="毕业">🎓 毕业</option>
+              <option value="联谊">🤝 联谊</option>
+              <option value="社团招新">📣 社团招新</option>
+              <option value="其他">📌 其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">⑥</span>活动场地 <span class="label-hint">选填</span></label>
+          <input type="text" id="activity-venue" class="form-input" placeholder="例如：学生活动中心大礼堂、室外操场...">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span class="label-num">⑦</span>活动日期</label>
+          <div class="date-picker-wrap">
+            <span class="date-icon">📅</span>
+            <input type="date" id="activity-date" class="form-input date-input">
+            <span class="date-clear" id="date-clear" title="清除日期">✕</span>
+          </div>
+          <div class="date-shortcuts">
+            <button class="date-shortcut" data-offset="0">今天</button>
+            <button class="date-shortcut" data-offset="7">一周后</button>
+            <button class="date-shortcut" data-offset="14">两周后</button>
+            <button class="date-shortcut" data-offset="30">一个月后</button>
+          </div>
+        </div>
+        <button id="btn-start" class="btn-primary">
+          <span class="btn-icon">✨</span>开始生成方案
+        </button>
+        <div class="hint-text" id="btn-show-examples"><span class="hint-icon">💡</span>看看别人怎么用 →</div>
+      </div>
+    
+    <!-- 校园合伙人入口 -->
+    <div class="partner-entry" id="btn-go-partner">
+      <div class="partner-entry-icon">🏆</div>
+      <div class="partner-entry-info">
+        <div class="partner-entry-title">校园合伙人计划</div>
+        <div class="partner-entry-desc">推广活动赚"米"，升级享专属权益</div>
+      </div>
+      <div class="partner-entry-arrow">→</div>
+    </div>
+
+  </main>
+  </div>
+
+  <!-- Page 2: Loading页 -->
+  <div id="page-loading" class="page">
+    <div class="loading-container">
+      <div class="loading-animation">
+        <div class="music-wave">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+      <h2 class="loading-title">AI 正在为你生成专属方案</h2>
+      <p class="loading-subtitle">QQ音乐 × 腾讯视频 深度分析中...</p>
+      <div class="loading-progress-wrap">
+        <div class="loading-progress-bar" id="loading-progress-bar"></div>
+      </div>
+      
+      <div class="steps-container">
+        <div class="step pending-step" id="step-1"><div class="step-icon pending"></div><div class="step-text">正在理解活动意图...</div></div>
+        <div class="step pending-step" id="step-2"><div class="step-icon pending"></div><div class="step-text">正在唤醒音乐灵感 ✨...</div></div>
+        <div class="step pending-step" id="step-3"><div class="step-icon pending"></div><div class="step-text">从 QQ音乐 曲库提取 BGM...</div></div>
+        <div class="step pending-step" id="step-4"><div class="step-icon pending"></div><div class="step-text">注入灵魂主持串词...</div></div>
+      </div>
+      <div class="loading-time">预计需要 <span class="time-highlight">10-15</span> 秒</div>
+      <button id="btn-cancel-gen" class="cancel-gen-btn">✕ 取消生成</button>
+    </div>
+  </div>
+
+  <!-- Page 3: 方案输出页 -->
+  <div id="page-result" class="page">
+    <header class="result-header">
+      <button class="btn-back" id="btn-back"><span>←</span> 重新策划</button>
+      <h1 class="result-title">活动方案</h1>
+      <button class="btn-share" id="btn-export"><span>📤</span> 导出</button>
+    </header>
+    <div class="summary-card">
+      <h2 class="summary-title" id="result-theme">动漫社迎新晚会</h2>
+      <div class="summary-tags">
+        <span class="summary-tag" id="result-type">🎭 晚会</span>
+        <span class="summary-tag" id="result-people">👥 50-200人</span>
+        <span class="summary-tag" id="result-duration">⏰ 2小时</span>
+        <span class="summary-tag" id="result-style">🎨 活泼</span>
+        <span class="summary-tag" id="result-date" style="display:none">📅 日期</span>
+      </div>
+    </div>
+    <nav class="tab-nav">
+
+      <button class="tab-btn active" data-tab="tab-process">📋 活动流程</button>
+
+      <button class="tab-btn" data-tab="tab-playlist">🎵 专属歌单</button>
+
+      <button class="tab-btn" data-tab="tab-script">🎤 主持串词</button>
+
+      <button class="tab-btn" data-tab="tab-tasks">✅ 任务清单</button>
+
+      <button class="tab-btn" data-tab="tab-trailer">🎬 预告片</button>
+
+      <button class="tab-btn tab-btn-qiumi" data-tab="tab-qiumi">🌾 求米</button>
+
+    </nav>
+    <div class="tab-content">
+      <div id="tab-process" class="tab-pane active">
+
+        <div class="process-timeline" id="process-list"></div>
+
+      </div>
+
+      <div id="tab-playlist" class="tab-pane">
+        <div class="playlist-sections" id="playlist-list"></div>
+        <button class="btn-secondary" id="btn-save-playlist"><span>💚</span> 一键保存歌单到QQ音乐</button>
+      </div>
+      <div id="tab-script" class="tab-pane">
+        <div class="script-list" id="script-list"></div>
+        <button class="btn-secondary" id="btn-export-script"><span>📄</span> 导出串词Word文档</button>
+      </div>
+      <div id="tab-tasks" class="tab-pane">
+        <div class="task-list" id="task-list"></div>
+        <button class="btn-secondary" id="btn-send-qq"><span>💬</span> 一键发送到QQ群</button>
+      </div>
+      <!-- 独立预告片 Tab -->
+
+      <div id="tab-trailer" class="tab-pane">
+
+        <div class="trailer-card" id="trailer-card">
+
+          <div class="trailer-card-header">
+
+            <span class="trailer-icon">🎬</span>
+
+            <h3>活动预告片生成</h3>
+
+            <span class="trailer-badge">AI 生成</span>
+
+          </div>
+
+          <div class="trailer-body">
+
+            <div class="trailer-cover" id="trailer-cover">
+
+              <div class="trailer-cover-placeholder"><span>🏏</span><p>预告封面</p></div>
+
+            </div>
+
+            <div class="trailer-info">
+
+              <div class="trailer-row">
+
+                <span class="trailer-label">封面风格</span>
+
+                <div class="trailer-style-chips" id="trailer-style-chips">
+
+                  <button class="trailer-chip active" data-style="活泼">🎉 活泼</button>
+
+                  <button class="trailer-chip" data-style="正式">🏛️ 正式</button>
+
+                  <button class="trailer-chip" data-style="炅酷">⚡ 炅酷</button>
+
+                </div>
+
+              </div>
+
+              <div class="trailer-row">
+
+                <span class="trailer-label">预告文案</span>
+
+                <div class="trailer-copy-tabs">
+
+                  <button class="copy-tab active" data-copy="正式">正式</button>
+
+                  <button class="copy-tab" data-copy="活泼">活泼</button>
+
+                  <button class="copy-tab" data-copy="搞笑">搞笑</button>
+
+                </div>
+
+                <div class="trailer-copy-text" id="trailer-copy-text"></div>
+
+              </div>
+
+              <div class="trailer-row trailer-bgm-row">
+
+                <span class="trailer-label">🎵 背景音乐</span>
+
+                <span class="trailer-bgm-name" id="trailer-bgm">匹配中...</span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="trailer-actions">
+
+            <button class="btn-trailer-gen" id="btn-gen-trailer"><span>✨</span> 生成预告片</button>
+
+            <button class="btn-trailer-publish" id="btn-publish-trailer" disabled><span>📺</span> 一键发布到腾讯视频</button>
+
+            <button class="btn-trailer-share" id="btn-share-trailer" disabled><span>🔗</span> 生成分享链接</button>
+
+          </div>
+
+          <div class="trailer-share-row" id="trailer-share-row" style="display:none">
+
+            <input class="trailer-link-input" id="trailer-link" readonly value="">
+
+            <button class="btn-share-qq" id="btn-share-qq-trailer">💬 QQ群</button>
+
+            <button class="btn-share-wx" id="btn-share-wx-trailer">💚 微信</button>
+
+          </div>
+
+        </div>
+
+        <div class="trailer-review-bridge">
+
+          <div class="bridge-icon">🎉</div>
+
+          <div class="bridge-text">
+
+            <strong>预告片发出去后...</strong>
+
+            <p>活动结束，邀请所有同学上传现场素材，AI 一键生成回顾视频发到腾讯视频</p>
+
+          </div>
+
+          <button class="btn-review-entry" id="btn-go-review">
+
+            <span>📸</span> 去活动回顾页
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- 求米 Tab -->
+
+      <div id="tab-qiumi" class="tab-pane">
+
+        <div class="qiumi-tab-entry">
+
+          <div class="qiumi-entry-icon">🌾</div>
+
+          <h3 class="qiumi-entry-title">向品牌求赞助奖品</h3>
+
+          <p class="qiumi-entry-desc">一键生成品牌赞助申请，向 QQ音乐、腾讯视频等品牌求取周边奖品，吸引更多同学参与活动！</p>
+
+          <div class="qiumi-entry-tags">
+
+            <span class="qiumi-entry-tag">🎧 QQ音乐周边</span>
+
+            <span class="qiumi-entry-tag">🎬 腾讯视频会员</span>
+
+            <span class="qiumi-entry-tag">🎮 游戏周边</span>
+
+            <span class="qiumi-entry-tag">📦 品牌盲盒</span>
+
+          </div>
+
+          <button class="btn-primary btn-go-qiumi-tab" id="btn-go-qiumi">
+
+            <span>🌾</span> 开始求米
+
+          </button>
+
+          <p class="qiumi-entry-hint">已有1,234个活动通过求米获得赞助 🎉</p>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Page 4: 导出/分享页 -->
+  <div id="page-export" class="page">
+    <header class="export-header">
+      <button class="btn-back" id="btn-back-export"><span>←</span> 返回方案</button>
+      <h1>导出与分享</h1>
+    </header>
+    <div class="export-container">
+      <div class="export-section">
+        <h3>📤 导出选项</h3>
+        <div class="export-options">
+          <button class="export-btn" id="export-pdf"><span class="export-icon">📑</span><span class="export-text">导出完整策划 PDF</span></button>
+          <button class="export-btn" id="export-word"><span class="export-icon">📝</span><span class="export-text">导出串词 Word 文档</span></button>
+          <button class="export-btn" id="export-text"><span class="export-icon">📋</span><span class="export-text">复制活动方案摘要文本</span></button>
+        </div>
+      </div>
+      <div class="export-section">
+        <h3>🔗 分享选项</h3>
+        <div class="export-options">
+          <button class="export-btn" id="share-poster"><span class="export-icon">🖼️</span><span class="export-text">生成分享海报</span></button>
+          <button class="export-btn" id="share-link"><span class="export-icon">🔗</span><span class="export-text">分享链接</span></button>
+        </div>
+      </div>
+
+      <!-- 海报背景设置 (P2新增) -->
+      <div class="export-section poster-bg-section">
+        <h3>🎨 海报背景设置</h3>
+        <p class="section-hint">选择背景后点击「生成分享海报」</p>
+        <div class="bg-preset-row">
+          <div class="bg-preset active" data-preset="default">
+            <div class="bg-preset-thumb bg-preset-default"></div>
+            <span>默认绿</span>
+          </div>
+          <div class="bg-preset" data-preset="night">
+            <div class="bg-preset-thumb bg-preset-night"></div>
+            <span>星空夜</span>
+          </div>
+          <div class="bg-preset" data-preset="sunset">
+            <div class="bg-preset-thumb bg-preset-sunset"></div>
+            <span>日落橙</span>
+          </div>
+          <div class="bg-preset" data-preset="ocean">
+            <div class="bg-preset-thumb bg-preset-ocean"></div>
+            <span>海洋蓝</span>
+          </div>
+          <div class="bg-preset" data-preset="custom">
+            <div class="bg-preset-thumb bg-preset-custom"><span class="upload-plus">＋</span></div>
+            <span>自定义</span>
+          </div>
+        </div>
+        <div id="custom-upload-area" class="custom-upload-area" style="display:none;">
+          <label for="background-upload" class="upload-label">
+            <div class="upload-drop-zone" id="upload-drop-zone">
+              <span class="upload-icon-big">🖼️</span>
+              <p>点击或拖拽图片到此处</p>
+              <p class="upload-hint">支持 JPG / PNG / WebP</p>
+            </div>
+          </label>
+          <input type="file" id="background-upload" accept="image/jpeg,image/png,image/webp" style="display:none;">
+        </div>
+        <div id="background-preview" class="bg-preview-wrap" style="display:none;">
+          <img id="background-image-preview" src="" alt="背景预览">
+          <div class="bg-preview-actions">
+            <span id="background-filename" class="bg-filename"></span>
+            <button class="btn-remove-bg" id="btn-remove-bg">✕ 移除</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-secondary btn-full" id="btn-view-history"><span>📚</span> 查看历史方案记录</button>
+      <button class="btn-primary btn-full" id="btn-new-plan"><span>🔄</span> 重新策划一个活动</button>
+    </div>
+  </div>
+
+  <!-- Page 5: 历史记录页 (P3新增) -->
+  <div id="page-history" class="page">
+    <header class="export-header">
+      <button class="btn-back" id="btn-back-history"><span>←</span> 返回</button>
+      <h1>历史方案记录</h1>
+    </header>
+    <div class="export-container">
+      <div class="history-list" id="history-list"></div>
+    </div>
+  </div>
+
+  <!-- Page 6: 活动回顾页 (v2.0新增) -->
+  <div id="page-review" class="page">
+    <header class="result-header">
+      <button class="btn-back" id="btn-back-review"><span>←</span> 返回方案</button>
+      <h1 class="result-title">活动回顾</h1>
+    </header>
+    <div class="review-container">
+
+      <!-- ① 活动信息展示区 -->
+      <div class="review-section review-info-section">
+        <div class="review-activity-info">
+          <span class="review-activity-name" id="review-name">活动名称</span>
+          <div class="review-activity-meta">
+            <span id="review-meta-date">📅 --</span>
+            <span id="review-meta-people">👥 --</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 邀请同学投稿入口 -->
+      <div class="review-section invite-section">
+        <div class="invite-header">
+          <span class="invite-icon">📲</span>
+          <div>
+            <h3>邀请同学上传素材</h3>
+            <p class="invite-desc">分享链接给所有参与者，大家都可以上传现场照片和视频片段</p>
+          </div>
+        </div>
+        <div class="invite-actions">
+          <div class="invite-qr-area">
+            <div class="invite-qr-mock" id="invite-qr-grid"></div>
+            <p class="invite-qr-label">扫码投稿</p>
+          </div>
+          <div class="invite-link-area">
+            <div class="invite-link-box">
+              <input class="invite-link-input" id="invite-link-input" readonly value="https://act.qq.com/review/abc123">
+              <button class="btn-copy-invite" id="btn-copy-invite">复制链接</button>
+            </div>
+            <div class="invite-share-btns">
+              <button class="invite-share-btn" id="btn-invite-qq"><span>💬</span> 发到QQ群</button>
+              <button class="invite-share-btn" id="btn-invite-wx"><span>💚</span> 发到微信</button>
+            </div>
+          </div>
+        </div>
+        <div class="invite-stats">
+          <span class="invite-stat-item"><span id="invite-submit-count">3</span> 人已投稿</span>
+          <span class="invite-stat-dot">·</span>
+          <span class="invite-stat-item"><span id="invite-file-count">12</span> 个素材</span>
+        </div>
+      </div>
+
+      <!-- ③ 素材上传区 -->
+      <div class="review-section">
+        <div class="review-section-header">
+          <h3>📸 上传活动素材</h3>
+          <span class="review-count-badge" id="media-count">0 个文件</span>
+        </div>
+        <div class="review-upload-zone" id="review-upload-zone">
+          <label for="media-upload" class="review-upload-label">
+            <span class="review-upload-icon">＋</span>
+            <p>点击上传照片 / 视频片段</p>
+            <p class="upload-hint">支持 JPG / PNG / MP4</p>
+          </label>
+          <input type="file" id="media-upload" accept="image/*,video/mp4" multiple style="display:none;">
+        </div>
+        <div class="media-preview-grid" id="media-preview-grid"></div>
+      </div>
+
+      <!-- ③ 活动感想输入区 -->
+      <div class="review-section">
+        <div class="review-section-header">
+          <h3>💬 活动感想</h3>
+          <span class="review-optional">选填 · AI将转为视频字幕</span>
+        </div>
+        <textarea id="review-caption" class="review-textarea" rows="3" placeholder="写下这次活动的精彩瞬间、感想或寄语..."></textarea>
+      </div>
+
+      <!-- ④ 回顾视频配乐区 -->
+      <div class="review-section">
+        <div class="review-section-header">
+          <h3>🎵 回顾视频配乐</h3>
+          <button class="btn-change-bgm" id="btn-change-bgm">🔀 换一首</button>
+        </div>
+        <div class="review-bgm-card" id="review-bgm-card">
+          <span class="review-bgm-cover">🎵</span>
+          <div class="review-bgm-info">
+            <div class="review-bgm-title" id="review-bgm-title">自动匹配中...</div>
+            <div class="review-bgm-artist" id="review-bgm-artist">来自 QQ音乐</div>
+          </div>
+          <span class="review-bgm-playing">▶</span>
+        </div>
+      </div>
+
+      <!-- ⑤ AI生成回顾视频 -->
+      <div class="review-section">
+        <div class="review-section-header">
+          <h3>🤖 AI生成回顾视频</h3>
+          <span class="review-optional">智能剪辑 + 字幕 + 配乐</span>
+        </div>
+        <div class="gen-option-row">
+          <span class="gen-option-label">视频风格</span>
+          <div class="gen-option-chips" id="review-video-style">
+            <button class="chip active" data-value="温情">💝 温情</button>
+            <button class="chip" data-value="活泼">🎉 活泼</button>
+            <button class="chip" data-value="燃">🔥 燃</button>
+            <button class="chip" data-value="文艺">🎨 文艺</button>
+          </div>
+        </div>
+        <button class="btn-gen-review" id="btn-gen-review">
+          <span>🎬</span> AI 生成回顾视频
+        </button>
+      </div>
+
+      <!-- ⑥ 视频预览区 -->
+      <div class="review-section" id="review-preview-section" style="display:none">
+        <div class="review-section-header">
+          <h3>▶ 视频预览</h3>
+          <button class="btn-change-bgm" id="btn-regen-review">🔄 重新生成</button>
+        </div>
+        <div class="review-video-player">
+          <div class="review-video-screen" id="review-video-screen">
+            <div class="video-thumb">
+              <span class="video-play-btn">▶</span>
+              <div class="video-overlay-text" id="video-overlay-text"></div>
+            </div>
+          </div>
+          <div class="video-controls">
+            <span class="vc-time">0:00 / 2:30</span>
+            <div class="vc-progress"><div class="vc-bar" id="vc-bar"></div></div>
+            <span class="vc-vol">🔊</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ⑦ 发布与分享区 -->
+      <div class="review-section" id="review-publish-section" style="display:none">
+        <div class="review-section-header">
+          <h3>🚀 发布与分享</h3>
+        </div>
+        <div class="review-publish-actions">
+          <button class="btn-review-publish" id="btn-publish-review"><span>📺</span> 一键发布到腾讯视频</button>
+          <button class="btn-review-share-qq" id="btn-review-share-qq"><span>💬</span> 分享到 QQ 群</button>
+          <button class="btn-review-share-wx" id="btn-review-share-wx"><span>💚</span> 分享到微信</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/trailer.js"></script>
+  <script src="js/review.js"></script>
+  <script src="js/partner.js"></script>
+  <script src="js/sponsor.js"></script>
+
+  <!-- 示例弹窗 -->
+  <div class="modal-overlay" id="modal-examples" style="display:none">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>💡 别人是这样用的</h3>
+        <button class="modal-close" id="modal-close-examples">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="example-card" data-theme="动漫社迎新晚会" data-type="晚会" data-people="50" data-duration="180" data-styles="活泼,燃" data-venue="学生活动中心大礼堂">
+          <div class="example-emoji">🎌</div>
+          <div class="example-info">
+            <div class="example-title">动漫社迎新晚会</div>
+            <div class="example-tags"><span>🎭 晚会</span><span>👥 50人</span><span>⏰ 3小时</span><span>📍 活动中心</span></div>
+          </div>
+          <div class="example-arrow">→</div>
+        </div>
+        <div class="example-card" data-theme="毕业季告别晚会" data-type="毕业" data-people="100" data-duration="240" data-styles="温情,文艺" data-venue="校大礼堂">
+          <div class="example-emoji">🎓</div>
+          <div class="example-info">
+            <div class="example-title">毕业季告别晚会</div>
+            <div class="example-tags"><span>🎓 毕业</span><span>👥 100人</span><span>⏰ 半天</span><span>📍 校大礼堂</span></div>
+          </div>
+          <div class="example-arrow">→</div>
+        </div>
+        <div class="example-card" data-theme="电竞社秋季联赛" data-type="其他" data-people="20" data-duration="120" data-styles="炫酷,燃" data-venue="计算机学院机房">
+          <div class="example-emoji">🎮</div>
+          <div class="example-info">
+            <div class="example-title">电竞社秋季联赛</div>
+            <div class="example-tags"><span>📌 其他</span><span>👥 20人</span><span>⏰ 2小时</span><span>📍 机房</span></div>
+          </div>
+          <div class="example-arrow">→</div>
+        </div>
+        <div class="example-card" data-theme="跨院系联谊交友派对" data-type="联谊" data-people="50" data-duration="120" data-styles="活泼,搞笑" data-venue="校园广场">
+          <div class="example-emoji">🤝</div>
+          <div class="example-info">
+            <div class="example-title">跨院系联谊交友派对</div>
+            <div class="example-tags"><span>🤝 联谊</span><span>👥 50人</span><span>⏰ 2小时</span><span>📍 校园广场</span></div>
+          </div>
+          <div class="example-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- ==================== Page 7: 求米页 (极简版) ==================== -->
+  <div id="page-qiumi" class="page">
+    <header class="result-header">
+      <button class="btn-back" id="btn-back-qiumi"><span>←</span> 返回方案</button>
+      <h1 class="result-title">发起求米</h1>
+    </header>
+    
+    <div class="qiumi-container">
+      <!-- 极简活动信息栏 -->
+      <div class="qiumi-mini-header">
+        <div>
+          <div class="qm-h-title" id="qiumi-activity-name">动漫社迎新晚会</div>
+          <div style="font-size:11px; color:#9aa0ad; margin-top:2px;">周边商家招募</div>
+        </div>
+        <div class="qm-h-meta">预计 <span id="qiumi-activity-people">50人</span></div>
+      </div>
+
+      <div class="qiumi-core-card" style="margin-bottom: 24px; padding: 24px 20px;">
+        <div class="qiumi-core-title">发布奖品需求</div>
+        <div class="qiumi-core-sub" style="margin-bottom:24px;">吸引新店赞助，互换曝光流量</div>
+        
+        <div style="text-align:left; margin-bottom: 12px; font-size: 14px; font-weight: 700; color: #1a1d23;">需要哪类奖品？</div>
+        <div class="qiumi-reward-types" style="justify-content: center;">
+          <button class="qiumi-type-btn active" data-type="代金券">🎟️ 代金券</button>
+          <button class="qiumi-type-btn" data-type="免费体验">🎉 体验</button>
+          <button class="qiumi-type-btn" data-type="实物礼品">🎁 实物</button>
+          <button class="qiumi-type-btn" data-type="饮品零食">🍵 零食饮品</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin: 20px 0; padding: 16px 0; border-top: 1px dashed #f0f0f0; border-bottom: 1px dashed #f0f0f0;">
+          <span style="font-size: 14px; font-weight: 700; color: #1a1d23;">期望数量</span>
+          <div class="qiumi-count-row">
+            <button class="qiumi-count-btn" id="qiumi-count-minus">－</button>
+            <span class="qiumi-count-val" id="qiumi-count">10</span>
+            <button class="qiumi-count-btn" id="qiumi-count-plus">＋</button>
+          </div>
+        </div>
+        
+        <textarea class="qiumi-textarea" id="qiumi-desc" rows="2" placeholder="补充要求（如：无门槛）" style="background:#fafbfc; border:1px solid #e8ebf0;"></textarea>
+      </div>
+
+      <!-- 底部发布大按钮 -->
+      <button class="btn-primary btn-qiumi-publish" id="btn-publish-qiumi">
+        <span>🚀</span> 发送至赞助大厅
+      </button>
+
+      <!-- 发布成功状态 -->
+      <div class="qiumi-success" id="qiumi-success" style="display:none; margin-top:20px;">
+        <div class="qiumi-success-icon">🎉</div>
+        <h3>需求已发送！</h3>
+        <p>已推送给附近 <strong>8</strong> 家新开商家</p>
+        <div class="qiumi-success-actions">
+          <button class="btn-secondary" id="btn-view-sponsors">查看赞助大厅 →</button>
+          <button class="btn-ghost" id="btn-back-result-from-qiumi" style="border:none; color:#9aa0ad;">返回方案</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Page 8: 赞助大厅 ==================== -->
+  <div id="page-sponsor-hall" class="page">
+    <header class="result-header">
+      <button class="btn-back" id="btn-back-sponsor"><span>←</span> 返回</button>
+      <h1 class="result-title">赞助大厅</h1>
+    </header>
+    <div class="sponsor-container">
+
+      <!-- 我的求米需求状态 -->
+      <div class="sponsor-my-need">
+        <div class="sponsor-need-header">
+          <span class="sponsor-need-tag">我的求米需求</span>
+          <span class="sponsor-need-status">🟢 招募中</span>
+        </div>
+        <div class="sponsor-need-desc">
+          <span id="hall-activity-name">动漫社迎新晚会</span>
+          · 需要 <span id="hall-need-count">10</span> 份 <span id="hall-need-type">代金券</span>
+          · 预计 <span id="hall-reach">50</span> 人参与
+        </div>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="sponsor-progress-wrap">
+        <div class="sponsor-progress-label">
+          <span>已获赞助</span>
+          <span><span id="sponsor-got">6</span> / <span id="sponsor-total">10</span> 份</span>
+        </div>
+        <div class="sponsor-progress-bar-bg">
+          <div class="sponsor-progress-bar-fill" id="sponsor-progress-fill" style="width:60%"></div>
+        </div>
+      </div>
+
+      <!-- 赞助商列表 -->
+      <div class="sponsor-section-title">🏪 已响应的商家</div>
+      <div class="sponsor-list" id="sponsor-list">
+
+        <div class="sponsor-card sponsor-card--accepted">
+          <div class="sponsor-card-left">
+            <div class="sponsor-avatar" style="background:#fff0e6">🍵</div>
+            <div class="sponsor-info">
+              <div class="sponsor-name">蜜雪冰城（学生街店）</div>
+              <div class="sponsor-meta">📍 距活动地点 200m · 刚开业 1 个月</div>
+              <div class="sponsor-offer">提供：5张 买一送一券</div>
+            </div>
+          </div>
+          <div class="sponsor-card-right">
+            <span class="sponsor-status sponsor-status--accepted">✅ 已接受</span>
+          </div>
+        </div>
+
+        <div class="sponsor-card sponsor-card--accepted">
+          <div class="sponsor-card-left">
+            <div class="sponsor-avatar" style="background:#f0fff4">🍜</div>
+            <div class="sponsor-info">
+              <div class="sponsor-name">好味道拉面馆</div>
+              <div class="sponsor-meta">📍 距活动地点 350m · 刚开业 2 个月</div>
+              <div class="sponsor-offer">提供：1份 双人套餐券</div>
+            </div>
+          </div>
+          <div class="sponsor-card-right">
+            <span class="sponsor-status sponsor-status--accepted">✅ 已接受</span>
+          </div>
+        </div>
+
+        <div class="sponsor-card sponsor-card--pending">
+          <div class="sponsor-card-left">
+            <div class="sponsor-avatar" style="background:#f0f4ff">📚</div>
+            <div class="sponsor-info">
+              <div class="sponsor-name">墨韵书店</div>
+              <div class="sponsor-meta">📍 距活动地点 500m · 刚开业 3 个月</div>
+              <div class="sponsor-offer">提供：3张 满减券（每张10元）</div>
+            </div>
+          </div>
+          <div class="sponsor-card-right">
+            <span class="sponsor-status sponsor-status--pending">⏳ 待确认</span>
+            <button class="btn-accept-sponsor">接受</button>
+          </div>
+        </div>
+
+        <div class="sponsor-card sponsor-card--pending">
+          <div class="sponsor-card-left">
+            <div class="sponsor-avatar" style="background:#fdf0ff">🏋️</div>
+            <div class="sponsor-info">
+              <div class="sponsor-name">活力健身工作室</div>
+              <div class="sponsor-meta">📍 距活动地点 800m · 刚开业 1 个月</div>
+              <div class="sponsor-offer">提供：2张 体验课免费券</div>
+            </div>
+          </div>
+          <div class="sponsor-card-right">
+            <span class="sponsor-status sponsor-status--pending">⏳ 待确认</span>
+            <button class="btn-accept-sponsor">接受</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 推荐更多商家 -->
+      <div class="sponsor-section-title" style="margin-top:20px">💡 平台推荐商家</div>
+      <div class="sponsor-recommend-list" id="sponsor-recommend-list">
+
+        <div class="sponsor-recommend-card">
+          <div class="sponsor-avatar" style="background:#fff8e6">☕</div>
+          <div class="sponsor-recommend-info">
+            <div class="sponsor-name">星光咖啡</div>
+            <div class="sponsor-meta">📍 500m · 开业 2 周</div>
+            <div class="sponsor-tag-row">
+              <span class="sponsor-tag">饮品</span>
+              <span class="sponsor-tag">新店</span>
+            </div>
+          </div>
+          <button class="btn-invite-sponsor" id="btn-invite-1">邀请赞助</button>
+        </div>
+
+        <div class="sponsor-recommend-card">
+          <div class="sponsor-avatar" style="background:#e6fff4">🍱</div>
+          <div class="sponsor-recommend-info">
+            <div class="sponsor-name">轻食日记</div>
+            <div class="sponsor-meta">📍 600m · 开业 3 周</div>
+            <div class="sponsor-tag-row">
+              <span class="sponsor-tag">餐饮</span>
+              <span class="sponsor-tag">新店</span>
+            </div>
+          </div>
+          <button class="btn-invite-sponsor" id="btn-invite-2">邀请赞助</button>
+        </div>
+
+        <div class="sponsor-recommend-card">
+          <div class="sponsor-avatar" style="background:#f0e6ff">💄</div>
+          <div class="sponsor-recommend-info">
+            <div class="sponsor-name">美甲小屋</div>
+            <div class="sponsor-meta">📍 700m · 开业 1 个月</div>
+            <div class="sponsor-tag-row">
+              <span class="sponsor-tag">美妆</span>
+              <span class="sponsor-tag">新店</span>
+            </div>
+          </div>
+          <button class="btn-invite-sponsor" id="btn-invite-3">邀请赞助</button>
+        </div>
+
+      </div>
+
+      <!-- 底部操作 -->
+      <div class="sponsor-bottom-actions">
+        <button class="btn-secondary" id="btn-go-qiumi-from-hall">✏️ 修改求米需求</button>
+        <button class="btn-primary" id="btn-sponsor-done">奖品已到位，继续策划 →</button>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- ==================== Page 9: 校园合伙人中心 ==================== -->
+  <div id="page-partner" class="page">
+    <header class="result-header">
+      <button class="btn-back" id="btn-back-partner"><span>←</span> 返回</button>
+      <h1 class="result-title">🏆 校园合伙人中心</h1>
+    </header>
+
+    <div class="partner-container">
+
+      <!-- 合伙人等级卡片 -->
+      <div class="partner-level-card">
+        <div class="partner-level-header">
+          <div class="partner-level-badge">🥈</div>
+          <div class="partner-level-info">
+            <div class="partner-level-title">银牌合伙人</div>
+            <div class="partner-level-desc">再推广 7 场活动即可升级金牌</div>
+          </div>
+        </div>
+        <div class="partner-progress-wrap">
+          <div class="partner-progress-label">
+            <span>等级进度</span>
+            <span>3/10 场</span>
+          </div>
+          <div class="partner-progress-bar-bg">
+            <div class="partner-progress-bar-fill" style="width:30%"></div>
+          </div>
+        </div>
+        <div class="partner-level-benefits">
+          <div class="partner-benefit-item">
+            <span class="partner-benefit-icon">💰</span>
+            <span>10% 分成比例</span>
+          </div>
+          <div class="partner-benefit-item">
+            <span class="partner-benefit-icon">⚡</span>
+            <span>优先求米匹配</span>
+          </div>
+          <div class="partner-benefit-item">
+            <span class="partner-benefit-icon">🎧</span>
+            <span>专属客服</span>
+          </div>
+          <div class="partner-benefit-item partner-benefit-item--locked">
+            <span class="partner-benefit-icon">🔒</span>
+            <span>冠名推荐权（金牌解锁）</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 收益统计 -->
+      <div class="partner-stats-card">
+        <h3 class="partner-stats-title">📊 收益统计</h3>
+        <div class="partner-stats-grid">
+          <div class="partner-stat-item">
+            <div class="partner-stat-value">1,250 🌾</div>
+            <div class="partner-stat-label">本月获得</div>
+          </div>
+          <div class="partner-stat-item">
+            <div class="partner-stat-value">8,430 🌾</div>
+            <div class="partner-stat-label">累计获得</div>
+          </div>
+          <div class="partner-stat-item">
+            <div class="partner-stat-value">1,250 🌾</div>
+            <div class="partner-stat-label">可兑换</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 推广码 -->
+      <div class="partner-promo-card">
+        <h3 class="partner-promo-title">🔗 我的推广码</h3>
+        <div class="partner-promo-content">
+          <div class="partner-qrcode-placeholder">
+            <div class="partner-qrcode-icon">📱</div>
+            <div class="partner-qrcode-text">扫码进入</div>
+          </div>
+          <div class="partner-promo-link">
+            <div class="partner-link-label">推广链接</div>
+            <input class="partner-link-input" id="partner-promo-link" value="https://campus.qq.com/p/abc123" readonly>
+            <div class="partner-link-actions">
+              <button class="btn-copy-link" id="btn-copy-promo-link">📋 复制</button>
+              <button class="btn-share-qq" id="btn-share-promo-qq">QQ</button>
+              <button class="btn-share-wx" id="btn-share-promo-wx">微信</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 推广记录 -->
+      <div class="partner-records-card">
+        <h3 class="partner-records-title">📜 推广记录</h3>
+        <div class="partner-record-list" id="partner-record-list">
+          <div class="partner-record-item">
+            <div class="partner-record-info">
+              <div class="partner-record-name">🎵 动漫社迎新晚会</div>
+              <div class="partner-record-date">2026-04-20</div>
+            </div>
+            <div class="partner-record-status partner-record-status--success">+150 🌾</div>
+          </div>
+          <div class="partner-record-item">
+            <div class="partner-record-info">
+              <div class="partner-record-name">🎤 校园歌手大赛</div>
+              <div class="partner-record-date">2026-04-18</div>
+            </div>
+            <div class="partner-record-status partner-record-status--success">+200 🌾</div>
+          </div>
+          <div class="partner-record-item">
+            <div class="partner-record-info">
+              <div class="partner-record-name">🏃 春季运动会</div>
+              <div class="partner-record-date">2026-04-15</div>
+            </div>
+            <div class="partner-record-status partner-record-status--pending">进行中</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 合伙人排行榜 -->
+      <div class="partner-rank-card">
+        <h3 class="partner-rank-title">🏅 合伙人排行榜</h3>
+        <div class="partner-rank-list">
+          <div class="partner-rank-item">
+            <div class="partner-rank-badge">🥇</div>
+            <div class="partner-rank-name">张同学（计算机学院）</div>
+            <div class="partner-rank-value">钻石 · 12,500 🌾</div>
+          </div>
+          <div class="partner-rank-item">
+            <div class="partner-rank-badge">🥈</div>
+            <div class="partner-rank-name">李同学（艺术学院）</div>
+            <div class="partner-rank-value">金牌 · 8,430 🌾</div>
+          </div>
+          <div class="partner-rank-item">
+            <div class="partner-rank-badge">🥉</div>
+            <div class="partner-rank-name">王同学（经管学院）</div>
+            <div class="partner-rank-value">金牌 · 7,200 🌾</div>
+          </div>
+          <div class="partner-rank-item partner-rank-item--me">
+            <div class="partner-rank-badge">4</div>
+            <div class="partner-rank-name">我（当前）</div>
+            <div class="partner-rank-value">银牌 · 1,250 🌾</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部操作 -->
+      <div class="partner-bottom-actions">
+        <button class="btn-primary" id="btn-apply-partner">
+          <span>🚀</span> 申请成为合伙人
+        </button>
+        <button class="btn-secondary" id="btn-view-rank">
+          查看完整排行榜
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 全局 Toast 提示 -->
+  <div id="toast-container" class="toast-container"></div>
+</body>
+</html>
