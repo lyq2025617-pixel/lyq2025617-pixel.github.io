@@ -1,6 +1,7 @@
 // ===== LLM 配置 =====
+// 使用 Cloudflare Pages CORS 代理（更稳定）
 const LLM_CONFIG = {
-  baseUrl: 'https://corsproxy.io/?https://dashscope.aliyuncs.com/compatible-mode/v1',
+  baseUrl: 'https://corsproxy.cloudflareworkers.com/?https://dashscope.aliyuncs.com/compatible-mode/v1',
   apiKey:  'sk-a2461647f4b241afb9f7015407ad9f3b',
   model:   'qwen-turbo',
 };

@@ -274,13 +274,152 @@ function pickPlaylist(type, styles, theme) {
   return PLAYLIST_DB.energetic;
 }
 
+// 根据风格生成对应语气的串词
+function generateScriptByStyle(theme, type, styles, timeInfo, processTitle) {
+  const styleMap = {
+    '活泼': {
+      greet: ['亲爱的小伙伴们', '各位可爱的同学们', '嗨起来！'],
+      intro: ['今天真是太开心啦', '让我们一起嗨翻天', '准备好狂欢了吗'],
+      end: ['玩得开心哦', '下次再见啦', '么么哒~'],
+    },
+    '搞笑': {
+      greet: ['各位靓仔靓女', '在座的各位都是人才', '走过路过不要错过'],
+      intro: ['今天不笑算我输', '准备好笑出腹肌', '笑点低的慎入'],
+      end: ['笑够了没', '下次继续搞笑', '溜了溜了'],
+    },
+    '正式': {
+      greet: ['尊敬的各位来宾', '亲爱的老师们同学们', '各位领导各位嘉宾'],
+      intro: ['今天我们欢聚一堂', '共同见证这一时刻', '让我们共同开启'],
+      end: ['感谢大家的到来', '期待下次再会', '祝大家晚安'],
+    },
+    '温情': {
+      greet: ['亲爱的朋友们', '最爱的家人们', '温暖的大家庭'],
+      intro: ['在这个温暖的夜晚', '让我们感受爱与美好', '温情时刻即将开始'],
+      end: ['温暖永存心中', '爱你们哟', '愿温暖常伴'],
+    },
+    '燃': {
+      greet: ['全体注意', 'Are you ready', '让我们点燃全场'],
+      intro: ['激情燃烧的时刻到了', '准备好燃烧卡路里', '火力全开'],
+      end: ['燃爆全场', '永不熄灭', '下次更燃'],
+    },
+    '治愈': {
+      greet: ['疲惫的心灵需要休息', '让我们放松一下', '欢迎来到治愈空间'],
+      intro: ['在这里放下疲惫', '让音乐治愈心灵', '享受宁静时光'],
+      end: ['希望你被治愈', '元气满满地离开', '下次再见'],
+    },
+  };
+  
+  const primaryStyle = styles.find(s => styleMap[s]) || '活泼';
+  const styleConf = styleMap[primaryStyle];
+  
+  const templates = {
+    '开场环节': `【${timeInfo} ${processTitle}】\n${styleConf.greet[Math.floor(Math.random() * styleConf.greet.length)]}！欢迎来到「${theme}」的现场！\n${styleConf.intro[Math.floor(Math.random() * styleConf.intro.length)]}！现在，让我们用热烈的掌声开启今天的活动！`,
+    '节目表演': `【${timeInfo} ${processTitle}】\n精彩的节目即将开始！让我们用最热烈的掌声欢迎表演者们登场！`,
+    '互动游戏': `【${timeInfo} ${processTitle}】\n接下来是激动人心的互动游戏环节！有没有勇敢的小伙伴想要上台挑战？`,
+    '主题表演': `【${timeInfo} ${processTitle}】\n万众期待的时刻到了！让我们用最热烈的掌声请出今天的主角们！`,
+    '自由交流': `【${timeInfo} ${processTitle}】\n现在是自由交流时间，大家可以放松一下，享受美食，认识新朋友！`,
+    '结束环节': `【${timeInfo} ${processTitle}】\n快乐的时光总是短暂的，「${theme}」就要和大家说再见了！${styleConf.end[Math.floor(Math.random() * styleConf.end.length)]}！`,
+    '破冰暖场': `【${timeInfo} ${processTitle}】\n${styleConf.greet[Math.floor(Math.random() * styleConf.greet.length)]}！欢迎来到「${theme}」！让我们先来玩个小游戏热热身！`,
+    '组织介绍': `【${timeInfo} ${processTitle}】\n接下来让我们了解一下活动的组织方和精彩内容！`,
+    '互动体验': `【${timeInfo} ${processTitle}】\n现在是互动体验时间，大家积极参与哦！`,
+    '才艺展示': `【${timeInfo} ${processTitle}】\n有才艺的小伙伴们看过来！展示你的时刻到了！`,
+    '合影收尾': `【${timeInfo} ${processTitle}】\n让我们一起留下美好的回忆，准备合影啦！`,
+    '入场开幕': `【${timeInfo} ${processTitle}】\n欢迎各位毕业生入场！「${theme}」正式开始！`,
+    '回忆相册': `【${timeInfo} ${processTitle}】\n让我们一起回顾这美好的时光，看看那些难忘的瞬间！`,
+    '致辞环节': `【${timeInfo} ${processTitle}】\n接下来有请各位领导和老师为我们送上祝福！`,
+    '才艺汇演': `【${timeInfo} ${processTitle}】\n精彩的才艺表演即将开始，大家拭目以待！`,
+    '互动留念': `【${timeInfo} ${processTitle}】\n让我们尽情享受这最后的时光，留下美好的回忆！`,
+    '告别仪式': `【${timeInfo} ${processTitle}】\n天下没有不散的筵席，但我们的情谊永存！`,
+    '集合破冰': `【${timeInfo} ${processTitle}】\n${styleConf.greet[Math.floor(Math.random() * styleConf.greet.length)]}！欢迎来到「${theme}」！让我们快速认识一下彼此！`,
+    '团队竞技': `【${timeInfo} ${processTitle}】\n团队合作的时刻到了！让我们看看哪队最默契！`,
+    '才艺切磋': `【${timeInfo} ${processTitle}】\n才艺大比拼开始！谁才是今天的才艺之星？`,
+    '互选环节': `【${timeInfo} ${processTitle}】\n神秘的互选环节来啦！看看谁会是你的有缘人！`,
+    '自由社交': `【${timeInfo} ${processTitle}】\n自由社交时间到！多认识些新朋友吧！`,
+    '合影送别': `【${timeInfo} ${processTitle}】\n美好的时光总是短暂，让我们合影留念！`,
+    '宣传开场': `【${timeInfo} ${processTitle}】\n欢迎来到「${theme}」！让我们一起了解这个精彩的社团！`,
+    '社团展台': `【${timeInfo} ${processTitle}】\n各部门已经准备就绪，快去参观吧！`,
+    '体验活动': `【${timeInfo} ${processTitle}】\n亲身体验的时刻到了！快来参与吧！`,
+    '现场问答': `【${timeInfo} ${processTitle}】\n有什么问题尽管问，学长学姐们为你解答！`,
+    '报名加入': `【${timeInfo} ${processTitle}】\n心动不如行动！快来加入我们吧！`,
+    '收尾感谢': `【${timeInfo} ${processTitle}】\n感谢大家的参与！期待下次再见！`,
+    '活动开场': `【${timeInfo} ${processTitle}】\n${styleConf.greet[Math.floor(Math.random() * styleConf.greet.length)]}！「${theme}」正式开始！`,
+    '主体活动': `【${timeInfo} ${processTitle}】\n精彩的主体活动即将开始，大家准备好了吗？`,
+    '分享交流': `【${timeInfo} ${processTitle}】\n让我们分享一下今天的收获和感受！`,
+    '答谢致辞': `【${timeInfo} ${processTitle}】\n感谢大家的支持与参与！你们是最棒的！`,
+  };
+  
+  return templates[processTitle] || `【${timeInfo} ${processTitle}】\n欢迎来到「${theme}」！让我们一起度过美好的时光！`;
+}
+
+// 根据主题和类型生成定制化任务
+function generateTasks(theme, type, venue) {
+  const taskTemplates = {
+    '晚会': [
+      { title: '确定演出场地', desc: `联系${venue || '学校相关部门'}，预订场地并确认音响设备` },
+      { title: '节目编排', desc: '组织节目彩排，确保节目质量' },
+      { title: '宣传推广', desc: '制作海报、短视频进行宣传' },
+      { title: '物资采购', desc: '购买道具、奖品和茶歇用品' },
+      { title: '人员安排', desc: '安排主持人、摄影、后勤人员' },
+      { title: '应急预案', desc: '制定突发情况应对方案' },
+    ],
+    '迎新': [
+      { title: '破冰游戏准备', desc: '设计有趣的破冰游戏' },
+      { title: '资料准备', desc: '准备迎新手册和报名表' },
+      { title: '场地布置', desc: '营造温馨的迎新氛围' },
+      { title: '志愿者培训', desc: '培训迎新志愿者' },
+      { title: '餐饮安排', desc: '准备迎新茶歇' },
+      { title: '后续跟进', desc: '建立新生群，持续跟进' },
+    ],
+    '毕业': [
+      { title: '视频制作', desc: '制作毕业纪念视频' },
+      { title: '场地装饰', desc: '布置毕业典礼场地' },
+      { title: '邀请嘉宾', desc: '邀请老师和嘉宾出席' },
+      { title: '礼品准备', desc: '准备毕业纪念品' },
+      { title: '流程彩排', desc: '进行毕业典礼彩排' },
+      { title: '合影安排', desc: '组织班级和集体合影' },
+    ],
+    '联谊': [
+      { title: '嘉宾邀请', desc: '邀请联谊对象参加活动' },
+      { title: '互动游戏设计', desc: '设计有趣的互动游戏' },
+      { title: '场地布置', desc: '营造浪漫的联谊氛围' },
+      { title: '配对机制', desc: '设计合理的配对方式' },
+      { title: '餐饮安排', desc: '准备精致的茶点' },
+      { title: '后续跟进', desc: '建立联谊群，促进交流' },
+    ],
+    '社团招新': [
+      { title: '展台设计', desc: '设计吸引人的招新展台' },
+      { title: '宣传物料', desc: '制作招新海报和传单' },
+      { title: '成员培训', desc: '培训招新接待人员' },
+      { title: '报名系统', desc: '准备报名表和报名流程' },
+      { title: '展示内容', desc: '准备社团成果展示' },
+      { title: '后续沟通', desc: '及时回复报名人员咨询' },
+    ],
+    '其他': [
+      { title: '场地预订', desc: `预订${venue || '活动'}场地` },
+      { title: '活动宣传', desc: '进行活动宣传推广' },
+      { title: '物资准备', desc: '准备活动所需物资' },
+      { title: '人员分工', desc: '明确各人员职责' },
+      { title: '流程策划', desc: '详细规划活动流程' },
+      { title: '应急预案', desc: '制定安全应急预案' },
+    ],
+  };
+  
+  const baseTasks = taskTemplates[type] || taskTemplates['其他'];
+  return baseTasks.map((task, index) => ({
+    title: task.title.replace(/XXX/g, theme),
+    desc: task.desc.replace(/XXX/g, theme),
+    done: index < 2, // 前两项标记为已完成
+  }));
+}
+
 // 用户输入映射到 mock 数据
 function getMockData(inputs) {
   const theme    = inputs.theme    || '校园活动';
   const type     = inputs.type     || '晚会';
   const duration = parseInt(inputs.duration) || 120; // 分钟
   const styles   = inputs.styles && inputs.styles.length ? inputs.styles : ['活泼'];
-  const date     = inputs.date || '';
+  const venue    = inputs.venue    || '';
+  const date     = inputs.date     || '';
 
   // ── 根据时长生成时间段 ─────────────────────────────────────
   const BASE_HOUR = 18;
@@ -361,22 +500,26 @@ function getMockData(inputs) {
     };
   });
 
-  // 其余数据保持原有 mock（串词/任务已有内容，不强制替换）
-  const base = Object.assign({}, MOCK_DATA);
-  base.process = process;
+  // ── 动态生成串词（根据风格）───────
+  const script = process.map(item => ({
+    time:    `${item.time} ${item.title}`,
+    content: generateScriptByStyle(theme, type, styles, item.time, item.title),
+  }));
 
-  // ── 动态选择歌单 ─────────────────────────────────────────
+  // ── 动态生成任务清单 ──────────────
+  const tasks = generateTasks(theme, type, venue);
+
+  // ── 动态选择歌单 ───────────────────
   const rawPlaylist = pickPlaylist(type, styles, theme);
-  base.playlist = rawPlaylist.map((group, i) => ({
+  const playlist = rawPlaylist.map((group, i) => ({
     section: process[i] ? `${group.section}（${process[i].title}）` : group.section,
     songs: group.songs,
   }));
 
-  // 串词中的活动主题替换（简单字符串替换）
-  base.script = MOCK_DATA.script.map(s => ({
-    time:    s.time,
-    content: s.content.replace(/动漫社迎新晚会/g, theme).replace(/动漫社/g, theme.slice(0,4)),
-  }));
-
-  return base;
+  return {
+    process: process,
+    playlist: playlist,
+    script: script,
+    tasks: tasks,
+  };
 }
