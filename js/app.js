@@ -115,10 +115,40 @@ function initPage1() {
 
 
 let generationTimeouts = [];
+let generationAborted  = false;
 
-// 模拟 AI 生成过程
-function simulateAIGeneration(inputs) {
-  // 重置所有 step 到初始待机状态
+// ─── 工具：推进 loading 步骤 UI ───────────────────────────────────────────
+function advanceStep(stepId, progress) {
+  const progressBar = document.getElementById('loading-progress-bar');
+  const el = document.getElementById(stepId);
+  if (!el) return;
+  // 完成上一步（若有）
+  document.querySelectorAll('.step.running-step').forEach(s => {
+    s.className = 'step done-step';
+    const ic = s.querySelector('.step-icon');
+    if (ic) { ic.textContent = '✓'; ic.className = 'step-icon completed'; }
+  });
+  el.className = 'step running-step';
+  const icon = el.querySelector('.step-icon');
+  if (icon) { icon.textContent = ''; icon.className = 'step-icon running'; }
+  if (progressBar) progressBar.style.width = progress + '%';
+}
+
+function completeAllSteps() {
+  const progressBar = document.getElementById('loading-progress-bar');
+  document.querySelectorAll('.step').forEach(el => {
+    el.className = 'step done-step';
+    const icon = el.querySelector('.step-icon');
+    if (icon) { icon.textContent = '✓'; icon.className = 'step-icon completed'; }
+  });
+  if (progressBar) progressBar.style.width = '100%';
+}
+
+// ─── 真实 AI 生成（调用 LLM，失败降级 mock）──────────────────────────────
+async function simulateAIGeneration(inputs) {
+  generationAborted = false;
+
+  // 重置 UI
   document.querySelectorAll('.step').forEach(el => {
     el.className = 'step pending-step';
   });
@@ -126,54 +156,69 @@ function simulateAIGeneration(inputs) {
     el.textContent = '';
     el.className = 'step-icon pending';
   });
-
-  // 重置进度条
   const progressBar = document.getElementById('loading-progress-bar');
   if (progressBar) progressBar.style.width = '0%';
-  
-  // 清理之前的 timeout
   generationTimeouts.forEach(clearTimeout);
   generationTimeouts = [];
 
-  const steps = [
-    {id: 'step-1', delay: 1000,  progress: 25},
-    {id: 'step-2', delay: 2500,  progress: 50},
-    {id: 'step-3', delay: 4000,  progress: 75},
-    {id: 'step-4', delay: 5500,  progress: 100}
-  ];
+  // Step 1 — 理解意图（立即开始）
+  advanceStep('step-1', 10);
 
-  steps.forEach((step, idx) => {
-    const startDelay = idx === 0 ? 200 : steps[idx - 1].delay + 200;
-    const endDelay   = step.delay;
-
-    generationTimeouts.push(setTimeout(() => {
-      const el = document.getElementById(step.id);
-      if (!el) return;
-      el.className = 'step running-step';
-      const icon = el.querySelector('.step-icon');
-      if (icon) { icon.textContent = ''; icon.className = 'step-icon running'; }
-    }, startDelay));
-
-    generationTimeouts.push(setTimeout(() => {
-      const el = document.getElementById(step.id);
-      if (!el) return;
-      el.className = 'step done-step';
-      const icon = el.querySelector('.step-icon');
-      if (icon) { icon.textContent = '✓'; icon.className = 'step-icon completed'; }
-      if (progressBar) progressBar.style.width = step.progress + '%';
-    }, endDelay));
-  });
-
+  // Step 2 — 唤醒音乐灵感（500ms 后）
   generationTimeouts.push(setTimeout(() => {
-    updateResultPage(inputs);
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    const firstTabBtn = document.querySelector('.tab-btn[data-tab="tab-process"]');
-    const firstTabPane = document.getElementById('tab-process');
-    if (firstTabBtn) firstTabBtn.classList.add('active');
-    if (firstTabPane) firstTabPane.classList.add('active');
-    showPage('page-result');
-  }, 6500));
+    if (!generationAborted) advanceStep('step-2', 30);
+  }, 500));
+
+  let llmData = null;
+  let usedMock = false;
+
+  try {
+    // 并发：发 LLM 请求，同时继续推进 UI step
+    const llmPromise = generateWithLLM(inputs);
+
+    // Step 3 — 提取 BGM（1.5s 后）
+    generationTimeouts.push(setTimeout(() => {
+      if (!generationAborted) advanceStep('step-3', 60);
+    }, 1500));
+
+    // 等待 LLM 返回
+    llmData = await llmPromise;
+
+    if (generationAborted) return;
+
+    // Step 4 — 注入串词
+    advanceStep('step-4', 85);
+    await new Promise(r => setTimeout(r, 400));
+
+  } catch (err) {
+    console.warn('LLM 调用失败，降级使用 mock 数据：', err.message);
+    if (generationAborted) return;
+    usedMock = true;
+    llmData  = getMockData(inputs);
+    advanceStep('step-4', 85);
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  if (generationAborted) return;
+
+  completeAllSteps();
+  await new Promise(r => setTimeout(r, 300));
+
+  if (generationAborted) return;
+
+  if (usedMock) {
+    window.showToast('⚠️ AI 接口调用失败，已使用示例数据');
+  }
+
+  // 渲染结果
+  updateResultPage(inputs, llmData);
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  const firstTabBtn  = document.querySelector('.tab-btn[data-tab="tab-process"]');
+  const firstTabPane = document.getElementById('tab-process');
+  if (firstTabBtn)  firstTabBtn.classList.add('active');
+  if (firstTabPane) firstTabPane.classList.add('active');
+  showPage('page-result');
 }
 
 // 全局 Toast 提示函数
@@ -198,13 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCancel.addEventListener('click', () => {
       generationTimeouts.forEach(clearTimeout);
       generationTimeouts = [];
+      generationAborted  = true;
       showPage('page-input');
     });
   }
 });
 
 // 更新结果页内容
-function updateResultPage(inputs) {
+function updateResultPage(inputs, llmData) {
   // 更新摘要信息
   document.getElementById('result-theme').textContent = inputs.theme;
   document.getElementById('result-type').textContent = 
@@ -256,7 +302,7 @@ function updateResultPage(inputs) {
   if (inviteLinkEl) inviteLinkEl.value = inviteLink;
 
   // 获取 mock 数据
-  const data = getMockData(inputs);
+  const data = llmData || getMockData(inputs);
   
   // 更新活动流程
   const processList = document.getElementById('process-list');
@@ -355,6 +401,8 @@ function updateResultPage(inputs) {
   `;
   
   // 更新主持串词
+  window._scriptData = data.script;   // 供其他功能引用
+
   const scriptList = document.getElementById('script-list');
   scriptList.innerHTML = `
     <div class="result-card">
@@ -371,18 +419,13 @@ function updateResultPage(inputs) {
           </div>
           <div class="csb-progress"><div class="csb-fill" style="width: 15%; background: linear-gradient(90deg, #F59E0B, #fde68a);"></div></div>
         </div>
-        ${data.script.map(item => `
-          <div class="script-item" data-time="${item.time}">
+        ${data.script.map((item, idx) => `
+          <div class="script-item" data-idx="${idx}">
             <div class="script-item-header">
               <div class="script-time">${item.time}</div>
-              <div class="script-style-tabs">
-                <button class="script-style-btn active" data-style="formal">\u6b63\u5f0f</button>
-                <button class="script-style-btn" data-style="lively">\u6d3b\u6cfc</button>
-                <button class="script-style-btn" data-style="funny">\u641e\u7b11</button>
-              </div>
-              <button class="btn-copy-script" title="\u4e00\u952e\u590d\u5236">\ud83d\udccb</button>
+              <button class="btn-copy-script" title="一键复制">📋</button>
             </div>
-            <div class="script-content" data-formal="${item.content}" data-lively="${item.lively||item.content}" data-funny="${item.funny||item.content}">${item.content.replace(/\n/g, '<br>')}</div>
+            <div class="script-content" data-idx="${idx}">${(item.content || '').replace(/\n/g, '<br>')}</div>
           </div>
         `).join('')}
       </div>
@@ -521,19 +564,9 @@ function initPage3() {
     }
   });
 
-  // ── 串词：风格切换 + 一键复制 (事件委托) ──
+  // ── 串词：一键复制 ──
   document.getElementById('script-list').addEventListener('click', (e) => {
-    const styleBtn = e.target.closest('.script-style-btn');
-    const copyBtn  = e.target.closest('.btn-copy-script');
-    if (styleBtn) {
-      const item = styleBtn.closest('.script-item');
-      item.querySelectorAll('.script-style-btn').forEach(b => b.classList.remove('active'));
-      styleBtn.classList.add('active');
-      const style = styleBtn.dataset.style;
-      const contentEl = item.querySelector('.script-content');
-      const text = contentEl.dataset[style] || contentEl.dataset.formal || '';
-      contentEl.innerHTML = text.replace(/\n/g, '<br>');
-    }
+    const copyBtn = e.target.closest('.btn-copy-script');
     if (copyBtn) {
       const item = copyBtn.closest('.script-item');
       const text = item.querySelector('.script-content').textContent;
@@ -769,8 +802,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPageExportExtra();
 });
 
-// 覆盖 DOMContentLoaded 追加初始化
-document.addEventListener('DOMContentLoaded', () => {
-  initBackgroundUpload();
-  initPageExportExtra();
-});
+
+
+
+

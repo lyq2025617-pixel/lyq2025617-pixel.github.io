@@ -188,117 +188,96 @@
         <button class="btn-secondary" id="btn-send-qq"><span>💬</span> 一键发送到QQ群</button>
       </div>
       <!-- 独立预告片 Tab -->
-
       <div id="tab-trailer" class="tab-pane">
 
         <div class="trailer-card" id="trailer-card">
-
           <div class="trailer-card-header">
-
             <span class="trailer-icon">🎬</span>
-
             <h3>活动预告片生成</h3>
-
             <span class="trailer-badge">AI 生成</span>
-
           </div>
 
-          <div class="trailer-body">
-
-            <div class="trailer-cover" id="trailer-cover">
-
-              <div class="trailer-cover-placeholder"><span>🏏</span><p>预告封面</p></div>
-
-            </div>
-
-            <div class="trailer-info">
-
-              <div class="trailer-row">
-
-                <span class="trailer-label">封面风格</span>
-
-                <div class="trailer-style-chips" id="trailer-style-chips">
-
-                  <button class="trailer-chip active" data-style="活泼">🎉 活泼</button>
-
-                  <button class="trailer-chip" data-style="正式">🏛️ 正式</button>
-
-                  <button class="trailer-chip" data-style="炅酷">⚡ 炅酷</button>
-
+          <!-- 视频播放器区域 -->
+          <div class="trailer-player-wrap" id="trailer-player-wrap">
+            <div class="trailer-player" id="trailer-player">
+              <!-- 播放前：占位封面 -->
+              <div class="trailer-player-idle" id="trailer-player-idle">
+                <span class="idle-icon">🎬</span>
+                <p class="idle-tip">填写活动信息后，点击下方按钮生成预告片</p>
+              </div>
+              <!-- Canvas 动画层（生成后显示） -->
+              <canvas id="trailer-canvas" width="560" height="315" style="display:none;width:100%;height:100%;border-radius:10px;"></canvas>
+              <!-- 播放控制条 -->
+              <div class="player-controls" id="player-controls" style="display:none">
+                <button class="ctrl-btn" id="ctrl-play">▶</button>
+                <div class="ctrl-progress-wrap">
+                  <div class="ctrl-progress-bar"><div class="ctrl-progress-fill" id="ctrl-fill"></div></div>
                 </div>
-
+                <span class="ctrl-time" id="ctrl-time">0:00 / 0:30</span>
+                <button class="ctrl-btn" id="ctrl-replay">↺</button>
               </div>
-
-              <div class="trailer-row">
-
-                <span class="trailer-label">预告文案</span>
-
-                <div class="trailer-copy-tabs">
-
-                  <button class="copy-tab active" data-copy="正式">正式</button>
-
-                  <button class="copy-tab" data-copy="活泼">活泼</button>
-
-                  <button class="copy-tab" data-copy="搞笑">搞笑</button>
-
-                </div>
-
-                <div class="trailer-copy-text" id="trailer-copy-text"></div>
-
+              <!-- 生成中蒙层 -->
+              <div class="trailer-generating" id="trailer-generating" style="display:none">
+                <div class="gen-spinner"></div>
+                <p id="gen-status-text">AI 正在生成预告片...</p>
+                <div class="gen-progress-bar"><div class="gen-progress-fill" id="gen-fill"></div></div>
               </div>
-
-              <div class="trailer-row trailer-bgm-row">
-
-                <span class="trailer-label">🎵 背景音乐</span>
-
-                <span class="trailer-bgm-name" id="trailer-bgm">匹配中...</span>
-
-              </div>
-
             </div>
-
           </div>
 
+          <!-- 配置区 -->
+          <div class="trailer-config">
+            <div class="trailer-row">
+              <span class="trailer-label">画面风格</span>
+              <div class="trailer-style-chips" id="trailer-style-chips">
+                <button class="trailer-chip active" data-style="活泼">🎉 活泼</button>
+                <button class="trailer-chip" data-style="正式">🏛️ 正式</button>
+                <button class="trailer-chip" data-style="炫酷">⚡ 炫酷</button>
+                <button class="trailer-chip" data-style="温情">💝 温情</button>
+                <button class="trailer-chip" data-style="燃">🔥 燃</button>
+              </div>
+            </div>
+            <div class="trailer-row">
+              <span class="trailer-label">文案风格</span>
+              <div class="trailer-copy-tabs">
+                <button class="copy-tab active" data-copy="正式">正式</button>
+                <button class="copy-tab" data-copy="活泼">活泼</button>
+                <button class="copy-tab" data-copy="搞笑">搞笑</button>
+              </div>
+            </div>
+            <div class="trailer-row trailer-bgm-row">
+              <span class="trailer-label">🎵 配乐</span>
+              <span class="trailer-bgm-name" id="trailer-bgm">匹配中...</span>
+            </div>
+            <div class="trailer-row" id="trailer-copy-row" style="display:none">
+              <span class="trailer-label">预告文案</span>
+              <div class="trailer-copy-text" id="trailer-copy-text"></div>
+            </div>
+          </div>
+
+          <!-- 操作按钮 -->
           <div class="trailer-actions">
-
             <button class="btn-trailer-gen" id="btn-gen-trailer"><span>✨</span> 生成预告片</button>
-
-            <button class="btn-trailer-publish" id="btn-publish-trailer" disabled><span>📺</span> 一键发布到腾讯视频</button>
-
+            <button class="btn-trailer-publish" id="btn-publish-trailer" disabled><span>📺</span> 发布到腾讯视频</button>
             <button class="btn-trailer-share" id="btn-share-trailer" disabled><span>🔗</span> 生成分享链接</button>
-
           </div>
 
           <div class="trailer-share-row" id="trailer-share-row" style="display:none">
-
             <input class="trailer-link-input" id="trailer-link" readonly value="">
-
             <button class="btn-share-qq" id="btn-share-qq-trailer">💬 QQ群</button>
-
             <button class="btn-share-wx" id="btn-share-wx-trailer">💚 微信</button>
-
           </div>
-
         </div>
 
         <div class="trailer-review-bridge">
-
           <div class="bridge-icon">🎉</div>
-
           <div class="bridge-text">
-
             <strong>预告片发出去后...</strong>
-
             <p>活动结束，邀请所有同学上传现场素材，AI 一键生成回顾视频发到腾讯视频</p>
-
           </div>
-
           <button class="btn-review-entry" id="btn-go-review">
-
             <span>📸</span> 去活动回顾页
-
           </button>
-
         </div>
 
       </div>
@@ -579,6 +558,7 @@
   <script src="js/app.js"></script>
   <script src="js/history.js"></script>
   <script src="js/trailer.js"></script>
+  <script src="js/trailer-player.js"></script>
   <script src="js/review.js"></script>
   <script src="js/partner.js"></script>
   <script src="js/sponsor.js"></script>
@@ -976,6 +956,27 @@
             <div class="partner-rank-badge">4</div>
             <div class="partner-rank-name">我（当前）</div>
             <div class="partner-rank-value">银牌 · 1,250 🌾</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部操作 -->
+      <div class="partner-bottom-actions">
+        <button class="btn-primary" id="btn-apply-partner">
+          <span>🚀</span> 申请成为合伙人
+        </button>
+        <button class="btn-secondary" id="btn-view-rank">
+          查看完整排行榜
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 全局 Toast 提示 -->
+  <div id="toast-container" class="toast-container"></div>
+</body>
+</html>
           </div>
         </div>
       </div>
