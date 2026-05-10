@@ -1,6 +1,6 @@
 // ===== LLM 配置 =====
 const LLM_CONFIG = {
-  baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  baseUrl: 'https://corsproxy.io/?https://dashscope.aliyuncs.com/compatible-mode/v1',
   apiKey:  'sk-a2461647f4b241afb9f7015407ad9f3b',
   model:   'qwen-turbo',
 };
