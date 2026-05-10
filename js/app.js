@@ -144,7 +144,7 @@ function completeAllSteps() {
   if (progressBar) progressBar.style.width = '100%';
 }
 
-// ─── 使用增强版 Mock 数据生成（稳定可靠）──────────────────────────────
+// ─── 调用 LLM 生成方案（失败时降级使用 Mock 数据）──────────────────────
 async function simulateAIGeneration(inputs) {
   generationAborted = false;
 
@@ -169,25 +169,35 @@ async function simulateAIGeneration(inputs) {
     if (!generationAborted) advanceStep('step-2', 30);
   }, 500));
 
-  // Step 3 — 提取 BGM（1.5s 后）
-  generationTimeouts.push(setTimeout(() => {
-    if (!generationAborted) advanceStep('step-3', 60);
-  }, 1500));
+  let llmData = null;
+  let usedMock = false;
 
-  // 使用增强版 mock 数据生成方案（根据用户输入动态生成）
-  const llmData = getMockData(inputs);
+  try {
+    // 并发：发 LLM 请求，同时继续推进 UI step
+    const llmPromise = generateWithLLM(inputs);
 
-  if (generationAborted) return;
+    // Step 3 — 提取 BGM（1.5s 后）
+    generationTimeouts.push(setTimeout(() => {
+      if (!generationAborted) advanceStep('step-3', 60);
+    }, 1500));
 
-  // Step 4 — 注入串词（2s 后）
-  generationTimeouts.push(setTimeout(() => {
-    if (!generationAborted) {
-      advanceStep('step-4', 85);
-    }
-  }, 2000));
+    // 等待 LLM 返回
+    llmData = await llmPromise;
 
-  // 等待动画完成
-  await new Promise(r => setTimeout(r, 2500));
+    if (generationAborted) return;
+
+    // Step 4 — 注入串词
+    advanceStep('step-4', 85);
+    await new Promise(r => setTimeout(r, 400));
+
+  } catch (err) {
+    console.warn('LLM 调用失败，降级使用 mock 数据：', err.message);
+    if (generationAborted) return;
+    usedMock = true;
+    llmData  = getMockData(inputs);
+    advanceStep('step-4', 85);
+    await new Promise(r => setTimeout(r, 300));
+  }
 
   if (generationAborted) return;
 
@@ -196,7 +206,11 @@ async function simulateAIGeneration(inputs) {
 
   if (generationAborted) return;
 
-  // 渲染结果（使用根据用户输入动态生成的数据）
+  if (usedMock) {
+    window.showToast('⚠️ AI 接口调用失败，已使用示例数据');
+  }
+
+  // 渲染结果（LLM 或 Mock 数据）
   updateResultPage(inputs, llmData);
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
